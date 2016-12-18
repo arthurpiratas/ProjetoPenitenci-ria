@@ -36,9 +36,14 @@ int ativo;
 
 typedef struct funcAtividade{
 
-int IDdetenti;
+int IDfuncAtv;
+int IDdetento;
 int IDatividade;
 char dataAtividade[20];
+int Ativa;
+char turno;
+char diaSemana[15];
+int preenchido;
 
 } FuncAtividade;
 
@@ -65,6 +70,16 @@ int salaVisista;
 
 } Visitas;
 
+typedef struct penas{
+
+int ID;
+char descricao[20];
+char Regiume[20];
+int grau;
+int preenchido;
+
+
+} Penas;
 
 typedef struct detentos{
 
@@ -78,7 +93,7 @@ char escolaridade[50];
 int numeroAla;
 int telefone;
 float avaliacao;
-int pena;
+int IDpena;
 int preenchido;
 int ativo;
 char Profissao[30];
@@ -100,14 +115,5 @@ int IDvisitante;
 
 } EntradaSaida;
 
-typedef struct penas{
 
-int ID;
-char descricao[20];
-char Regiume[20];
-int grau;
-int preenchido;
-
-
-} Penas;
 #endif // ENTIDADE_H_INCLUDED

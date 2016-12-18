@@ -1,12 +1,15 @@
 #include <stdio.h>
 #include <string.h>
 #include "Entidade.h"
+#include "Validacoes.h"
 #include <stdlib.h>
 #define true 1
 #define false 0
 #include <time.h>
 #define MAX_Detentos 200
 #define Max_Penas 100
+#define Max_Atividade 100
+#define Max_FuncAtividade 500
 
 
 
@@ -21,7 +24,7 @@ int validaString(char String[]){
 int validaIntPositivo(int numero){
     int a = 0;
 
-    if(numero > 0){
+    if(numero >= 0){
         a = 1;
     }
     return a;
@@ -102,7 +105,7 @@ void copiaDetentoParaVetor(Detentos den, Detentos denVec[]){
     strcpy(denVec[ID].escolaridade, den.escolaridade);
     denVec[ID].numeroAla = den.numeroAla;
     denVec[ID].telefone = den.telefone;
-    denVec[ID].pena = den.pena;
+    denVec[ID].IDpena = den.IDpena;
     denVec[ID].ativo = den.ativo;
     denVec[ID].preenchido = den.preenchido;
     strcpy(denVec[ID].Profissao, den.Profissao);
@@ -150,3 +153,76 @@ void copiaPenaParaVetor(Penas pen, Penas penVec[]){
     penVec[ID].preenchido = pen.preenchido;
 
 }
+
+
+int verificaAtividadeExiste(int ID, Atividade atvVec[]){
+
+    int result = 0, cont;
+
+     for(cont = 0; cont <= Max_Atividade; cont++){
+        if(atvVec[cont].ID == ID){
+            result++;
+            break;
+        }
+     }
+
+     return result;
+}
+
+int verificaAtividadeExisteDesc(char stringA[], Atividade atvVec[]){
+
+    int index, result = 0;
+
+        for(index = 0; index <= Max_Atividade; index++){
+           if(strcmp(atvVec[index].descricao, stringA) == 0){
+                result = 1;
+                break;
+            }
+        }
+
+        return result;
+}
+
+void copiaAtividadeParaVetor(Atividade atv, Atividade atvVec[]){
+
+    int ID = atv.ID;
+    strcpy(atvVec[ID].descricao, atv.descricao);
+    atvVec[ID].ID = atv.ID;
+    atvVec[ID].avaliacao = atv.avaliacao;
+    atvVec[ID].remuneracao = atv.remuneracao;
+    atvVec[ID].preenchido = atv.preenchido;
+    atvVec[ID].ativo = atv.ativo;
+
+}
+
+int verificaAtividadeAlocada(FuncAtividade funatv[], FuncAtividade atv){
+
+    int result = 0, cont;
+
+    for(cont = 0; cont <= Max_FuncAtividade; cont++){
+        if(funatv[cont].IDdetento == atv.IDdetento && funatv[cont].IDatividade == atv.IDatividade){
+            result++;
+        }
+    }
+
+    return result;
+}
+
+
+
+void copiaFuncAtividadeParaVetor(FuncAtividade funcAtv, FuncAtividade funcAtvVec[]){
+
+
+    int ID = funcAtv.IDfuncAtv;
+    strcpy(funcAtvVec[ID].dataAtividade, funcAtv.dataAtividade);
+    strcpy(funcAtvVec[ID].diaSemana,  funcAtv.diaSemana);
+    funcAtvVec[ID].turno = funcAtv.turno;
+    funcAtvVec[ID].IDatividade = funcAtv.IDatividade;
+    funcAtvVec[ID].IDdetento = funcAtv.IDdetento;
+    funcAtvVec[ID].preenchido = funcAtv.preenchido;
+    funcAtvVec[ID].Ativa = funcAtv.Ativa;
+
+
+}
+
+

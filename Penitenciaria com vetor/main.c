@@ -17,25 +17,36 @@ int main()
 
     Detentos *den;
     Penas *pen;
+    Atividade *atv;
+    FuncAtividade *funcAtv;
 
     den = malloc(sizeof(Detentos)*250);
     pen = malloc(sizeof(Penas)*100);
+    atv = malloc(sizeof(Atividade)*100);
+    funcAtv = malloc(sizeof(Atividade)*800);
 
     carregaDetentosVetor(6, den);
     carregaPenasVetor(8, pen);
+    carregaAtividadesVetor(2, atv);
+    carregaFuncAtividadesVetor(3, funcAtv);
 
-    while (a != 2){
+
+
+    while (a != 3){
 
         printf("\n***** Penitenciária ***** \n \n");
-        printf("1 - Menu Inicial \n2 - Sair  \n");
+        printf("1 - Menu Cadastros \n2 - Menu Atividade  \n3 - Sair \n");
         fflush(stdin);
         scanf("%d", &a);
         switch(a){
 
         case 1:
-            menuCadastros(den, pen);
+            menuCadastros(den, pen, atv);
             break;
         case 2:
+            menuGereciamentoAtividade(den, atv, funcAtv);
+            break;
+        case 3:
             printf("Sistema off \n");
             break;
         default:

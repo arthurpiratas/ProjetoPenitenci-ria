@@ -14,5 +14,8 @@ int verificaDetentoExisteCPFcdt(long int CPF, Detentos denVec[]);
 int verificaPenaExiste(int IDpena, Penas penVec[]);
 void copiaPenaParaVetor(Penas pen, Penas penVec[]);
 int verificaDecsPenaExiste(char stringP[], Penas penVec[]);
+int verificaAtividadeExiste(int ID, Atividade atvVec[]);
+int verificaAtividadeAlocada(FuncAtividade funatv[], FuncAtividade atv);
+int verificaAtividadeExisteDesc(char stringA[], Atividade atvVec[]);
 
 #endif // VALIDACOES_H_INCLUDED

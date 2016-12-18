@@ -37,6 +37,7 @@
 		<Unit filename="Entidade.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="Menu.h" />
 		<Unit filename="Negocio.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
@@ -47,6 +48,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="menu.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="negocio.c">
