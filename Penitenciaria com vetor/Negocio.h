@@ -21,4 +21,13 @@ void cadastroFuncAtividade(FuncAtividade funcAtvVec[], Atividade atvVec[], Deten
 void listaFuncAtvividadeDEN(FuncAtividade funcAtv[], Atividade atvVec[], Detentos denVec[], int flag);
 void excluiAtividadeDetento(FuncAtividade funcAtvVec[], Detentos denVec[], Atividade atvVec[]);
 
+void cadastraVisitantes(Visitantes visVec[]);
+void listaVisitantes(Visitantes visVec[]);
+void alteraVisitantes(Visitantes visVec[]);
+void excluiVisitantes(Visitantes visVec[]);
+
+void cadastraVisita(Visitas visitaVec[], Visitantes visVec[], Detentos denVec[]);
+void listaVisitas(Detentos denVec[], Visitantes visVec[], Visitas visitaVec[]);
+void alteraVisitas(Visitas visitaVec[], Visitantes visVec[], Detentos denVec[]);
+void excluirVisitas(Visitas visitaVec[], Visitantes visVec[], Detentos denVec[]);
 #endif // NEGOCIO_H_INCLUDED

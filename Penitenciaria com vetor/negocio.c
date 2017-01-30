@@ -568,7 +568,6 @@ void cadastroFuncAtividade(FuncAtividade funcAtvVec[], Atividade atvVec[], Deten
 
 
     do{
-
     if(CPF == 0){
         printf("CPF Digitado não é válido, favor digitar CPF correto \n");
     }
@@ -733,4 +732,463 @@ void excluiAtividadeDetento(FuncAtividade funcAtvVec[], Detentos denVec[], Ativi
 
 
 }
+
+void cadastraVisitantes(Visitantes visVec[]){
+
+    system("cls");
+    Visitantes vis, visBusca;
+
+    printf("************* Cadastro Visitantes **************** \n");
+
+    do{
+    printf("Digite o Nome do Visitante \n");
+    fflush(stdin);
+    gets(vis.Nome);
+    }while(!validaString(vis.Nome));
+
+
+
+    do{
+    printf("Digite o CPF do Visitante \n");
+    fflush(stdin);
+    }while(scanf("%ld", &vis.CPF) == 0);
+
+    do{
+    printf("Digite a Data de nascimento  \n");
+    fflush(stdin);
+    gets(vis.dataNascimento);
+    }while(!validaString(vis.dataNascimento));
+
+
+    printf("Digite a profissão do visitante  \n");
+    fflush(stdin);
+    gets(vis.profissao);
+
+    printf("Digite a escolaridade do visitante  \n");
+    fflush(stdin);
+    gets(vis.escolaridade);
+
+    vis.ID = retornaProximoIdVisitantes(4, visVec);
+
+    vis.preenchido = true;
+
+        if(!verificaVisitantesExisteCPF(vis.CPF, visVec)){
+            vis.ativo = true;
+            if(cadastroVisitantesCRUD(vis, 4)){
+                printf("Cadstro realizado!");
+                copiaVisitantesParaVetor(vis, visVec);
+            }else{
+                printf("Erro! Cadastro nao realizado");
+            }
+
+        }else{
+            printf("O visitante Digitada ja existe, favor cadastrar novamente \n");
+        }
+
+
+
+}
+
+void listaVisitantes(Visitantes visVec[]){
+    listaVisitantesCRUD(visVec);
+}
+
+void alteraVisitantes(Visitantes visVec[]){
+
+    system("cls");
+    Visitantes vis;
+    char nome[50];
+    long int cpf = 0;
+
+
+    printf("************* Alteração de  Visitantes **************** \n");
+
+    /*do{*/
+    printf("Digite o CPF do visitante a ser alterado %ld \n", cpf);
+    fflush(stdin);
+    scanf("ld", &cpf);
+    /*}while(scanf("ld", &cpf) == 0);*/
+
+    if(verificaVisitantesExisteCPF(cpf, visVec)){
+
+        vis = retornaVisitantesPorCPF(cpf, visVec);
+
+        printf("Digite o Nome do Visitante \n");
+        fflush(stdin);
+        gets(vis.Nome);
+
+        printf("Digite a Data de nascimento  \n");
+        fflush(stdin);
+        gets(vis.dataNascimento);
+
+        printf("Digite a profissão do visitante  \n");
+        fflush(stdin);
+        gets(vis.profissao);
+
+        printf("Digite a escolaridade do visitante  \n");
+        fflush(stdin);
+        gets(vis.escolaridade);
+
+        vis.preenchido = true;
+
+
+
+        if(!verificaVisitanteExisteNome(vis.Nome, visVec) || (strcmp(visVec[vis.ID].Nome, vis.Nome) == 0)){
+
+            vis.ativo = true;
+            if(alteraVisitantesCRUD(vis, vis.ID)){
+                printf("Alteração realizada!");
+                copiaVisitantesParaVetor(vis, visVec);
+            }else{
+                printf("Erro! Alteração nao realizado");
+            }
+
+        }else{
+            printf("O visitante Digitada ja existe, favor cadastrar novamente \n");
+        }
+
+    }else{
+        printf("Visitante não existe");
+    }
+
+
+
+
+
+}
+
+void excluiVisitantes(Visitantes visVec[]){
+
+    system("cls");
+    Visitantes vis;
+    int ID;
+    printf("\n");
+
+    listaVisitantesCRUD(visVec);
+
+    printf("************* Exclusão de  Visitantes **************** \n");
+
+    do{
+    printf("Digite o ID do visitante a ser excluido \n");
+    fflush(stdin);
+
+    }while(scanf("%d", &ID) == 0);
+
+
+    if(verificaVisitantesExisteID(ID, visVec)){
+
+        vis = retornaVisitantesPorID(ID, visVec);
+
+        vis.ativo = false;
+
+        if(alteraVisitantesCRUD(vis, vis.ID)){
+            printf("Exclusão realizada!");
+            copiaVisitantesParaVetor(vis, visVec);
+        }else{
+            printf("Erro! Exclusão não realizado");
+        }
+
+
+    }else{
+        printf("Visitante não existe");
+    }
+
+
+}
+
+void cadastraVisita(Visitas visitaVec[], Visitantes visVec[], Detentos denVec[]){
+
+    system("cls");
+    Visitas visita;
+    int IDden, IDvis;
+    char contr1;
+
+    printf("************* Cadastro de Visitas ****************");
+
+    printf("Digite o ID do Detento \n ");
+    scanf(&IDden);
+    fflush(stdin);
+
+    printf("Digite o ID do Visitante \n");
+    scanf(&IDvis);
+    fflush(stdin);
+
+    if(verificaDetentoExisteID(IDden, denVec) && verificaVisitantesExisteID(IDvis, visVec)){
+
+        printf("Detento %s e Visitante %s \n", denVec[IDden].Nome, visVec[IDvis].Nome);
+
+        printf("Digite a data para visita \n");
+        gets(visita.dataVisita);
+
+        printf("Digite sala da visita \n");
+        scanf("%d", &visita.salaVisista);
+
+        if(!verificaVisitaAgendadaPorSala(visita.dataVisita, visita.salaVisista, visitaVec)){
+                visita.IDdetento = IDden;
+                visita.IDvisitantes = IDvis;
+                visita.preenchido = true;
+                visita.IDvisitas = retornaProximoIdVisitas(5, visitaVec);
+
+                if(cadastroVisitasCRUD(visita, 5)){
+                    printf("Visita cadastrada!");
+                    copiaVisitasParaVetor(visita, visitaVec);
+                }else{
+                    printf("Erro: Visita não cadastrada!");
+                }
+
+        }else{
+            printf("Já existe visita agendada para esta sala/data ou os dados foram preenchidos indevidamente \n");
+
+        }
+
+    }else{
+        printf("Detento ou Visitante não existem, tente novamente, para tentar novamente digite S \n ");
+        scanf("%c", contr1);
+        fflush(stdin);
+
+        if(contr1 == "S"){
+            cadastraVisita(visitaVec, visVec, denVec);
+        }
+    }
+
+
+}
+
+void listaVisitas(Detentos denVec[], Visitantes visVec[], Visitas visitaVec[]){
+
+    system("cls");
+    int controle = 0, IDden;
+    char data[20], controle2;
+
+    printf("************* Lista de Visitas ************ \n");
+
+    printf("Digite \n1 - Lista todas as visitas \n2 - Lista visitas por detentos \n3 - Lista visitas até a data desejada \n4 - Lista visitas na data desejada \n");
+    scanf("%d", &controle);
+    fflush(stdin);
+
+    switch(controle){
+    case 1:
+        listaVisitasCRUD(visitaVec, denVec, visVec);
+        break;
+    case 2:
+        printf("Digite o ID do detento \n");
+        scanf("%d", &IDden);
+        fflush(stdin);
+
+        if(verificaDetentoExisteID(IDden, denVec)){
+
+            listaVisitasPorDetentoCRUD(visitaVec, denVec, visVec, IDden);
+
+
+        }else{
+            printf("Detento não existe. \n");
+        }
+
+        break;
+    case 3:
+        printf("Digite a Data \n");
+        gets(data);
+        fflush(stdin);
+        listaVisitasDataCRUD(visitaVec, denVec, visitaVec, 1, data);
+
+        break;
+    case 4:
+        printf("Digite a Data \n");
+        gets(data);
+        fflush(stdin);
+        listaVisitasDataCRUD(visitaVec, denVec, visitaVec, 2, data);
+
+        break;
+    default:
+        printf("Opção não é válida. \n");
+        break;
+
+    }
+
+    if(controle <= 4 && controle > 0){
+        printf("Digite S para adicionar uma visita? \n");
+        scanf("%c", &controle2);
+        fflush(stdin);
+
+        if(controle2 == "S"){
+            cadastraVisita(visitaVec, visVec, denVec);
+    }
+
+    system("PAUSE");
+
+}
+
+}
+
+void alteraVisitas(Visitas visitaVec[], Visitantes visVec[], Detentos denVec[]){
+
+    system("cls");
+    Visitas visita;
+    int IDden, IDvis, IDvisita;
+
+
+    char contr1;
+
+    printf("************* Alteração de Visitas ****************");
+
+    printf("Digite o ID do Detento \n ");
+    scanf(&IDden);
+    fflush(stdin);
+
+    printf("Digite o ID do Visitante \n");
+    scanf(&IDvis);
+    fflush(stdin);
+
+    if(verificaDetentoExisteID(IDden, denVec) && verificaVisitantesExisteID(IDvis, visVec)){
+
+        printf("Detento %s e Visitante %s \n", denVec[IDden].Nome, visVec[IDvis].Nome);
+
+
+        time_t agora;
+        char dataEntrada[50];
+        agora = time(NULL);
+        strftime( dataEntrada, sizeof(dataEntrada), "%d/%m/%Y", localtime( &agora ) );
+
+        listaVisitasDataCRUD(visitaVec, denVec, visVec, 3, dataEntrada);
+
+        printf("Digite o ID da visita a ser alterada \n");
+        scanf("%d", &IDvisita);
+
+        if(verificaVisitaExisteID(IDvisita, visitaVec)){
+
+             printf("Visita selecionada \n");
+
+             do{
+
+             printf("Digite a nova data para visita, a data tem que ser maior que a data de hoje \n");
+             gets(visita.dataVisita);
+
+             }while(verificaDataMenorMaior(visita.dataVisita, dataEntrada) == 1);
+             printf("Digite uma nova sala para visita \n");
+             scanf("%d", &visita.salaVisista);
+
+             if(!verificaVisitaAgendadaPorSala(visita.dataVisita, visita.salaVisista, visitaVec)){
+                visita.IDdetento = IDden;
+                visita.IDvisitantes = IDvis;
+                visita.preenchido = true;
+                visita.IDvisitas = IDvisita;
+
+                if(alteraVisitasCRUD(visita, IDvisita)){
+                    printf("Visita alterada! \n");
+                    copiaVisitasParaVetor(visita, visitaVec);
+                }else{
+                    printf("Erro: Visita não cadastrada!");
+                }
+
+            }else{
+                printf("Já existe visita agendada para esta sala/data ou os dados foram preenchidos indevidamente \n");
+
+            }
+           }
+
+
+
+    }else{
+        printf("Detento ou Visitante não existem, tente novamente, para tentar novamente digite S \n ");
+        scanf("%c", contr1);
+        fflush(stdin);
+
+        if(contr1 == "S"){
+            cadastraVisita(visitaVec, visVec, denVec);
+        }
+    }
+
+
+}
+
+void excluirVisitas(Visitas visitaVec[], Visitantes visVec[], Detentos denVec[]){
+
+    system("cls");
+    Visitas visita, buscaVisita;
+    int IDden, IDvis, IDvisita;
+
+
+    char contr1;
+
+    printf("************* Exclusão de Visitas ****************");
+
+    printf("Digite o ID do Detento \n ");
+    scanf(&IDden);
+    fflush(stdin);
+
+    printf("Digite o ID do Visitante \n");
+    scanf(&IDvis);
+    fflush(stdin);
+
+    if(verificaDetentoExisteID(IDden, denVec) && verificaVisitantesExisteID(IDvis, visVec)){
+
+        printf("Detento %s e Visitante %s \n", denVec[IDden].Nome, visVec[IDvis].Nome);
+
+
+        time_t agora;
+        char dataEntrada[50];
+        agora = time(NULL);
+        strftime( dataEntrada, sizeof(dataEntrada), "%d/%m/%Y", localtime( &agora ) );
+
+        listaVisitasDataCRUD(visitaVec, denVec, visVec, 3, dataEntrada);
+
+        printf("Digite o ID da visita a ser alterada \n");
+        scanf("%d", &IDvisita);
+
+        if(verificaVisitaExisteID(IDvisita, visitaVec)){
+
+            printf("Visita selecionada \n");
+
+            buscaVisita = retornaVisitasPorID(IDvisita, visitaVec);
+
+            if(verificaDataMenorMaior(buscaVisita.dataVisita, dataEntrada) != 1){
+
+                printf("Digite a nova data para visita \n");
+                gets(visita.dataVisita);
+
+                printf("Digite uma nova sala para visita \n");
+                scanf("%d", &visita.salaVisista);
+
+                if(!verificaVisitaAgendadaPorSala(visita.dataVisita, visita.salaVisista, visitaVec)){
+                    visita.IDdetento = IDden;
+                    visita.IDvisitantes = IDvis;
+                    visita.preenchido = true;
+                    visita.IDvisitas = IDvisita;
+
+                    if(alteraVisitasCRUD(visita, IDvisita)){
+                        printf("Visita alterada! \n");
+                        copiaVisitasParaVetor(visita, visitaVec);
+                    }else{
+                        printf("Erro: Visita não cadastrada!");
+                    }
+
+                }else{
+                    printf("Já existe visita agendada para esta sala/data ou os dados foram preenchidos indevidamente \n");
+
+                }
+
+            }else{
+                printf("Essa visita não pode ser excluida pois já foi realizada! \n");
+            }
+
+
+           }
+
+
+
+    }else{
+        printf("Detento ou Visitante não existem, tente novamente, para tentar novamente digite S \n ");
+        scanf("%c", contr1);
+        fflush(stdin);
+
+        if(contr1 == "S"){
+            cadastraVisita(visitaVec, visVec, denVec);
+        }
+    }
+
+
+}
+
+
+
 

@@ -51,7 +51,7 @@ typedef struct visitantes{
 
 int ID;
 char Nome[80];
-char CPF[20];
+long int  CPF;
 char dataNascimento[20];
 char profissao[20];
 char escolaridade[25];
@@ -63,9 +63,11 @@ int ativo;
 typedef struct visitas{
 
 int IDdetento;
-int IDpreso;
+int IDvisitantes;
+int IDvisitas;
 char dataVisita[20];
 int salaVisista;
+int preenchido;
 
 
 } Visitas;

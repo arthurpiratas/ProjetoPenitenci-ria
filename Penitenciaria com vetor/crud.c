@@ -12,6 +12,8 @@
 #define Max_Penas 100
 #define Max_Atividade 100
 #define Max_FuncAtividade 500
+#define Max_Visitantes 200
+#define Max_Visitas 500
 
 const char FUNCIONARIO[17] = "funcionario.bin";
 const char ATIVIDADE[15] = "atividade.bin";
@@ -124,7 +126,7 @@ void listaDetentoCRUD(Detentos den[], Penas penVec[]){
     for(result = 0; result <= 200; result++){
         if(den[result].ativo == true && den[result].preenchido == true){
 
-            printf("ID %d \nNome %s \nData de Nascimento %s \nPena %s \nRegime %s", den[result].ID, den[result].Nome, den[result].dataNascimento, penVec[den[result].IDpena].descricao, penVec[den[result].IDpena].Regiume);
+            printf("ID %d \nNome %s \nData de Nascimento %s \nPena %s \nRegime %s \nCPF %ld", den[result].ID, den[result].Nome, den[result].dataNascimento, penVec[den[result].IDpena].descricao, penVec[den[result].IDpena].Regiume, den[result].loginCPF);
             cont++;
         }
     }
@@ -160,6 +162,7 @@ Detentos retornaDetentoPorNome(char nome[], Detentos denVec[]){
 
     for(index = 0; index < 200; index++){
         if(strcmp(denVec[index].Nome, nome) == 0){
+                den.loginCPF = denVec[index].loginCPF;
                 strcpy(den.Nome, denVec[index].Nome);
                 strcpy(den.nomeMae, denVec[index].nomeMae);
                 den.ID = denVec[index].ID;
@@ -190,7 +193,40 @@ Detentos retornaDetentoPorCPF(long int CPF, Detentos denVec[]){
     Detentos den;
 
     for(index = 0; index < 200; index++){
-        if(denVec[index].loginCPF = CPF){
+        if(denVec[index].loginCPF == CPF){
+                den.loginCPF = denVec[index].loginCPF;
+                strcpy(den.Nome, denVec[index].Nome);
+                strcpy(den.nomeMae, denVec[index].nomeMae);
+                den.ID = denVec[index].ID;
+                strcpy(den.dataNascimento, denVec[index].dataNascimento);
+                den.avaliacao = denVec[index].avaliacao;
+                strcpy(den.dataEntrada, denVec[index].dataEntrada);
+                strcpy(den.dataSaida, denVec[index].dataSaida);
+                strcpy(den.escolaridade, denVec[index].escolaridade);
+                den.IDpena = denVec[index].IDpena;
+                den.numeroAla = denVec[index].numeroAla;
+                den.numeroQuarto = denVec[index].numeroQuarto;
+                strcpy(den.Profissao, denVec[index].Profissao);
+                den.telefone = denVec[index].telefone;
+                den.preenchido = denVec[index].preenchido;
+                den.ativo = denVec[index].ativo;
+                break;
+        }
+    }
+
+    return den;
+
+}
+
+Detentos retornaDetentoPorID(int ID, Detentos denVec[]){
+
+
+    int index = 0;
+    Detentos den;
+
+    for(index = 0; index < 200; index++){
+        if(denVec[index].ID == ID){
+                den.loginCPF = denVec[index].loginCPF;
                 strcpy(den.Nome, denVec[index].Nome);
                 strcpy(den.nomeMae, denVec[index].nomeMae);
                 den.ID = denVec[index].ID;
@@ -261,7 +297,7 @@ void realocaDetentos(Detentos denVec[]){
         int index = 0;
         abrirArquivo(6, "w+b", &pf);
 
-        fseek(pf, 0, SEEK_END);
+        fseek(pf, 0, SEEK_SET);
 
         fwrite(&denVec[cont], sizeof(Detentos), 1, pf);
         cont++;
@@ -665,7 +701,7 @@ int retornaFuncAtvID(int IDatividade, int IDdetento, FuncAtividade funcAtv[], ch
     int cont = 0, index = 0;
 
     for(index = 0; index <= Max_FuncAtividade; index++){
-        if(funcAtv[index].IDdetento == IDdetento && funcAtv[index].IDatividade == IDatividade && funcAtv[index].turno == turno && strcpy(funcAtv[index].diaSemana, diaSemana)){
+        if(funcAtv[index].IDdetento == IDdetento && funcAtv[index].IDatividade == IDatividade && funcAtv[index].turno == turno && (strcpy(funcAtv[index].diaSemana, diaSemana) == 0) ){
             cont = funcAtv[index].IDfuncAtv;
 
         }
@@ -673,3 +709,399 @@ int retornaFuncAtvID(int IDatividade, int IDdetento, FuncAtividade funcAtv[], ch
 
     return cont;
 }
+
+/* Visitantes */
+
+int cadastroVisitantesCRUD(Visitantes vis, int enty){
+
+    FILE *pf;
+    int result = 0;
+    abrirArquivo(enty, "a+b", &pf);
+
+    fseek(pf, 0, SEEK_END);
+
+    if(fwrite(&vis, sizeof(Visitantes), 1, pf) != 1){
+        result = 0;
+    }else {
+        result = 1;
+    }
+    fclose(pf);
+
+    return result;
+
+}
+
+void carregaVisitantesVetor(int enty, Visitantes vis[]){
+
+    FILE *pf;
+    int indix = 0;
+    abrirArquivo(enty, "a+b", &pf);
+    fseek(pf, 0, SEEK_SET);
+    memset(vis, 0, sizeof(Visitantes));
+
+
+    do{
+            if(fread(&vis[indix], sizeof(Visitantes), 1, pf) == 1){
+                indix++;
+            }
+
+
+    }while(!feof(pf));
+
+    fclose(pf);
+
+}
+
+void listaVisitantesCRUD(Visitantes vis[]){
+
+    system("cls");
+    int result = 0, cont = 0;
+
+    printf("***Lista de Detentos*** \n");
+
+
+    for(result = 0; result <= Max_Visitantes; result++){
+        if(vis[result].ativo == true && vis[result].preenchido == true){
+
+            printf("ID %d \nNome %s \nCPF %ld \nData de Nascimento %s \nProfissão %s \nEscolaridade %s \n",
+                   vis[result].ID,vis[result].Nome , vis[result].CPF, vis[result].dataNascimento, vis[result].profissao,
+                   vis[result].escolaridade);
+            cont++;
+        }
+    }
+
+
+
+    printf("******** A busca retornou %d Visitantes ********* \n", cont);
+
+}
+
+int retornaProximoIdVisitantes(int enty, Visitantes vis[]){
+
+    int result = 0, index;
+
+    for(index = 0; index < Max_Visitantes; index++){
+        if(vis[result].preenchido == true){
+            result++;
+        }else{
+            break;
+        }
+    }
+
+    return result;
+
+}
+
+Visitantes retornaVisitantesPorCPF(long int CPF, Visitantes visVec[]){
+
+
+    int index = 0;
+    Visitantes vis;
+
+    for(index = 0; index < Max_Visitantes; index++){
+        if(visVec[index].CPF == CPF){
+                vis.ID = visVec[index].ID;
+                strcpy(vis.Nome, visVec[index].Nome);
+                vis.CPF = visVec[index].CPF;
+                strcpy(vis.dataNascimento, visVec[index].dataNascimento);
+                strcpy(vis.escolaridade, visVec[index].escolaridade);
+                strcpy(vis.profissao, visVec[index].profissao);
+                vis.preenchido = visVec[index].preenchido;
+                vis.ativo = visVec[index].ativo;
+                break;
+        }
+    }
+
+    return vis;
+
+}
+
+Visitantes retornaVisitantesPorID(int ID, Visitantes visVec[]){
+
+
+    int index = 0;
+    Visitantes vis;
+
+    for(index = 0; index < Max_Visitantes; index++){
+        if(visVec[index].ID == ID){
+                vis.ID = visVec[index].ID;
+                strcpy(vis.Nome, visVec[index].Nome);
+                vis.CPF = visVec[index].CPF;
+                strcpy(vis.dataNascimento, visVec[index].dataNascimento);
+                strcpy(vis.escolaridade, visVec[index].escolaridade);
+                strcpy(vis.profissao, visVec[index].profissao);
+                vis.preenchido = visVec[index].preenchido;
+                vis.ativo = visVec[index].ativo;
+                break;
+        }
+    }
+
+    return vis;
+
+}
+
+int  alteraVisitantesCRUD(Visitantes vis, int id){
+
+    FILE *pf;
+    int retorno = 0;
+    abrirArquivo(4, "r+b", &pf);
+
+
+    rewind(pf);
+
+
+
+    fseek(pf, (id)*sizeof(Visitantes), SEEK_SET);
+
+    if(fwrite(&vis, sizeof(Visitantes), 1, pf) != 1){
+        retorno = 0;
+    }else {
+        retorno = 1;
+    }
+    fclose(pf);
+
+    return retorno;
+
+}
+
+/* Visitas */
+
+int cadastroVisitasCRUD(Visitas visitas, int enty){
+
+    FILE *pf;
+    int result = 0;
+
+    if(visitas.IDvisitas >= 500){
+        abrirArquivo(enty, "a+b", &pf);
+
+        fseek(pf, 0, SEEK_END);
+    }else{
+        abrirArquivo(enty, "r+b", &pf);
+
+        fseek(pf, 0, SEEK_SET);
+    }
+    if(fwrite(&visitas, sizeof(Visitas), 1, pf) != 1){
+        result = 0;
+    }else {
+        result = 1;
+    }
+    fclose(pf);
+
+    return result;
+
+}
+
+void carregaVisitasVetor(int enty, Visitas visitas[]){
+
+    FILE *pf;
+    int indix = 0;
+    abrirArquivo(enty, "a+b", &pf);
+    fseek(pf, 0, SEEK_SET);
+    memset(visitas, 0, sizeof(Visitas));
+
+
+    do{
+            if(fread(&visitas[indix], sizeof(Visitas), 1, pf) == 1){
+                indix++;
+            }
+
+
+    }while(!feof(pf));
+
+    fclose(pf);
+
+}
+
+void listaVisitasCRUD(Visitas visitas[], Detentos denVec[], Visitantes visVec[]){
+
+    system("cls");
+    int result = 0, cont = 0;
+
+        printf("***Lista de Todas Visitas*** \n");
+
+        for(result = 0; result <= Max_Visitas; result++){
+            if(visitas[result].preenchido == true){
+                printf("ID %d \nNome Detento %s \nNome Visitantes %s \nData de Visita %s \nSala da Visita %d  \n",
+                    visitas[result].IDvisitas, denVec[visitas[result].IDdetento].Nome, visVec[visitas[result].IDvisitantes].Nome,
+                    visitas[result].dataVisita, visitas[result].salaVisista);
+                cont++;
+        }
+    }
+
+}
+
+void listaVisitasPorDetentoCRUD(Visitas visitas[], Detentos denVec[], Visitantes visVec[], int ID){
+
+    system("cls");
+    int result = 0, cont = 0;
+
+
+    printf("***Lista de Visitas por detentos*** \n");
+
+        for(result = 0; result <= Max_Visitas; result++){
+            if(visitas[result].preenchido == true && visitas[result].IDdetento == ID){
+                    printf("ID %d \nNome Detento %s \nNome Visitantes %s \nData de Visita %s \nSala da Visita %d  \n",
+                    visitas[result].IDvisitas, denVec[visitas[result].IDdetento].Nome, visVec[visitas[result].IDvisitantes].Nome,
+                    visitas[result].dataVisita, visitas[result].salaVisista);
+                    cont++;
+            }
+        }
+
+    printf("******** A busca retornou %d Visitas ********* \n", cont);
+
+}
+
+void listaVisitasDataCRUD(Visitas visitas[], Detentos denVec[], Visitantes visVec[], int flag, char data[]){
+
+    system("cls");
+    int result = 0, cont = 0;
+
+    /*
+    1 - lista visitas até uma data específica
+    2 - lista visitas em uma data específica
+    3 - lista de uma data em diante.
+    */
+    time_t t1;
+    time_t t2;
+
+    struct tm tm;
+    int ano, mes;
+
+    sscanf( data, "%d.%d.%d", &tm.tm_mday, tm.tm_mon, tm.tm_year);
+
+    t1 = mktime(&tm);
+
+    if(flag == 1){
+        printf("***Lista de Visitas até a data %s*** \n", data);
+
+        for(result = 0; result <= Max_Visitas; result++){
+            if(visitas[result].preenchido == true){
+             sscanf(visitas[result].dataVisita, "%d.%d.%d", &tm.tm_mday, &tm.tm_mon, &tm.tm_year);
+             t2 = mktime(&tm);
+                if(t2 <= t1){
+                   printf("ID %d \nNome Detento %s \nNome Visitantes %s \nData de Visita %s \nSala da Visita %d  \n",
+                   visitas[result].IDvisitas, denVec[visitas[result].IDdetento].Nome, visVec[visitas[result].IDvisitantes].Nome,
+                   visitas[result].dataVisita, visitas[result].salaVisista);
+                   cont++;
+                 }
+             }
+        }
+
+    }else if(flag == 2){
+
+        printf("***Lista de Visitas para a data %s *** \n", data);
+
+        for(result = 0; result <= Max_Visitas; result++){
+            if(visitas[result].preenchido == true){
+             sscanf(visitas[result].dataVisita, "%d.%d.%d", &tm.tm_mday, tm.tm_mon, tm.tm_year);
+             t2 = mktime(&tm);
+                if(t2 == t1){
+                   printf("ID %d \nNome Detento %s \nNome Visitantes %s \nData de Visita %s \nSala da Visita %d  \n",
+                   visitas[result].IDvisitas, denVec[visitas[result].IDdetento].Nome, visVec[visitas[result].IDvisitantes].Nome,
+                   visitas[result].dataVisita, visitas[result].salaVisista);
+                   cont++;
+                 }
+             }
+        }
+    }else {
+
+        printf("***Lista de Visitas a partir da data:%s *** \n", data);
+
+        for(result = 0; result <= Max_Visitas; result++){
+            if(visitas[result].preenchido == true){
+             sscanf(visitas[result].dataVisita, "%d.%d.%d", &tm.tm_mday, &tm.tm_mon, &tm.tm_year);
+             t2 = mktime(&tm);
+                if(t2 >= t1){
+                   printf("ID %d \nNome Detento %s \nNome Visitantes %s \nData de Visita %s \nSala da Visita %d  \n",
+                   visitas[result].IDvisitas, denVec[visitas[result].IDdetento].Nome, visVec[visitas[result].IDvisitantes].Nome,
+                   visitas[result].dataVisita, visitas[result].salaVisista);
+                   cont++;
+                 }
+             }
+        }
+    }
+
+    printf("******** A busca retornou %d Visitas ********* \n", cont);
+
+}
+
+int retornaProximoIdVisitas(int enty, Visitas visita[]){
+
+    int result = 0, index;
+
+    for(index = 0; index < Max_Visitas; index++){
+        if(visita[result].preenchido == true){
+            result++;
+        }else{
+            break;
+        }
+    }
+
+    return result;
+
+}
+
+int  retornaVisitasID(int IdDetento, int IDVisitante, Visitas visitaVec[], char Data[], int sala){
+
+
+    int cont = 0, index = 0;
+
+    for(index = 0; index <= Max_Visitas; index++){
+        if(visitaVec[index].IDdetento == IdDetento && visitaVec[index].IDvisitantes == IDVisitante &&  (strcmp(visitaVec[index].dataVisita, Data) == 0) &&  visitaVec[index].salaVisista == sala) {
+            cont = visitaVec[index].IDvisitas;
+            break;
+
+        }
+    }
+
+    return cont;
+
+}
+
+Visitas retornaVisitasPorID(int ID, Visitas visVec[]){
+
+
+    int cont = 0, index = 0;
+    Visitas visita;
+
+    for(index = 0; index <= Max_Visitas; index++){
+        if(visVec[index].IDvisitas == ID) {
+            strcpy(visita.dataVisita, visVec[index].dataVisita);
+            visita.IDdetento = visVec[index].IDdetento;
+            visita.IDvisitantes = visVec[index].IDvisitantes;
+            visita.IDvisitas = ID;
+            visita.preenchido = visVec[index].preenchido;
+            visita.salaVisista = visVec[index].salaVisista;
+            break;
+
+        }
+    }
+
+    return visita;
+
+}
+
+int alteraVisitasCRUD(Visitas visitas, int id){
+
+    FILE *pf;
+    int retorno = 0;
+    abrirArquivo(5, "r+b", &pf);
+
+    rewind(pf);
+
+    fseek(pf, (id)*sizeof(Visitas), SEEK_SET);
+
+    if(fwrite(&visitas, sizeof(Visitas), 1, pf) != 1){
+        retorno = 0;
+    }else {
+        retorno = 1;
+    }
+    fclose(pf);
+
+    return retorno;
+
+}
+
+
+
+

@@ -10,7 +10,8 @@
 #define Max_Penas 100
 #define Max_Atividade 100
 #define Max_FuncAtividade 500
-
+#define Max_Visitantes 200
+#define Max_Visitas 500
 
 
 int validaString(char String[]){
@@ -50,6 +51,20 @@ int verificaDetentoExiste(char stringN[], Detentos denVec[]){
 
         for(index = 0; index <= MAX_Detentos; index++){
            if(strcmp(denVec[index].Nome, stringN) == 0){
+                result = 1;
+                break;
+            }
+        }
+
+        return result;
+}
+
+int verificaDetentoExisteID(int IDden, Detentos denVec[]){
+
+    int index, result = 0;
+
+        for(index = 0; index <= MAX_Detentos; index++){
+           if(denVec[index].ID ==  IDden){
                 result = 1;
                 break;
             }
@@ -200,7 +215,7 @@ int verificaAtividadeAlocada(FuncAtividade funatv[], FuncAtividade atv){
     int result = 0, cont;
 
     for(cont = 0; cont <= Max_FuncAtividade; cont++){
-        if(funatv[cont].IDdetento == atv.IDdetento && funatv[cont].IDatividade == atv.IDatividade){
+        if(funatv[cont].IDdetento == atv.IDdetento && funatv[cont].IDatividade == atv.IDatividade && (strcmp(funatv[cont].diaSemana, atv.diaSemana) == 0) && funatv[cont].Ativa == true && funatv[result].turno == atv.turno) {
             result++;
         }
     }
@@ -222,6 +237,136 @@ void copiaFuncAtividadeParaVetor(FuncAtividade funcAtv, FuncAtividade funcAtvVec
     funcAtvVec[ID].preenchido = funcAtv.preenchido;
     funcAtvVec[ID].Ativa = funcAtv.Ativa;
 
+
+}
+
+int verificaVisitanteExisteNome(char stringN[], Visitantes visVec[]){
+
+    int index, result = 0;
+
+        for(index = 0; index <= Max_Visitantes; index++){
+           if(strcmp(visVec[index].Nome , stringN) == 0){
+                result = 1;
+                break;
+            }
+        }
+
+        return result;
+}
+
+int verificaVisitantesExisteCPF(long int  CPF, Visitantes visVec[]){
+
+    int result = 0, cont;
+
+     for(cont = 0; cont <= Max_Visitantes; cont++){
+        if(visVec[cont].CPF == CPF){
+            result++;
+            break;
+        }
+     }
+
+     return result;
+}
+
+int verificaVisitantesExisteID(int  ID, Visitantes visVec[]){
+
+    int result = 0, cont;
+
+     for(cont = 0; cont <= Max_Visitantes; cont++){
+        if(visVec[cont].ID == ID){
+            result++;
+            break;
+        }
+     }
+
+     return result;
+}
+
+
+void copiaVisitantesParaVetor(Visitantes vis, Visitantes visVec[]){
+
+    int ID = vis.ID;
+    strcpy(visVec[ID].Nome, vis.Nome);
+    visVec[ID].ID = vis.ID;
+    strcpy(visVec[ID].dataNascimento, vis.dataNascimento);
+    strcpy(visVec[ID].escolaridade, vis.escolaridade);
+    strcpy(visVec[ID].profissao, vis.profissao);
+    visVec[ID].preenchido = vis.preenchido;
+    visVec[ID].ativo = vis.ativo;
+
+}
+
+int verificaVisitaAgendadaPorSala(char data[], int sala, Visitas vecVis[]){
+
+    int cont = 0;
+    int retorno = 0;
+
+    for(cont = 0; cont <= Max_Visitas; cont++){
+        if((strcmp(data, vecVis[cont].dataVisita) == 0) && sala == vecVis[cont].salaVisista && sala <=  15){
+            retorno = 1;
+            break;
+        }
+    }
+
+    return retorno;
+}
+
+void copiaVisitasParaVetor(Visitas vis, Visitas visVec[]){
+
+    int ID = vis.IDvisitas;
+    visVec[ID].IDdetento = vis.IDdetento;
+    visVec[ID].IDvisitantes = vis.IDvisitantes;
+    strcpy(visVec[ID].dataVisita, vis.dataVisita);
+    visVec[ID].salaVisista = vis.salaVisista;
+    visVec[ID].preenchido = vis.preenchido;
+
+}
+
+int verificaVisitaExisteID(int  ID, Visitas visVec[]){
+
+    int result = 0, cont;
+
+     for(cont = 0; cont <= Max_Visitas; cont++){
+        if(visVec[cont].IDvisitas == ID){
+            result++;
+            break;
+        }
+     }
+
+     return result;
+}
+
+int verificaDataMenorMaior(char data1[20], char data2[20]){
+
+    /* 1 - Data 1 menor que data 2 */
+    /* 2 - Data 1 maior que data 2 */
+    /* 3 - Data 1 igual a data 2 */
+
+    int cont = 0;
+
+    time_t t1;
+    time_t t2;
+
+    struct tm tm;
+    int ano, mes;
+
+    sscanf( data1, "%d.%d.%d", &tm.tm_mday, tm.tm_mon, tm.tm_year);
+
+    t1 = mktime(&tm);
+
+    sscanf( data2, "%d.%d.%d", &tm.tm_mday, tm.tm_mon, tm.tm_year);
+
+    t1 = mktime(&tm);
+
+    if(data1 < data2){
+        cont = 1;
+    } else if(data1 > data2){
+        cont = 2;
+    }else{
+        cont = 3;
+    }
+
+    return cont;
 
 }
 

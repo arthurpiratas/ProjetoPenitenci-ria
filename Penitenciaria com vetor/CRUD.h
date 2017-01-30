@@ -8,6 +8,7 @@ void listaDetentoCRUD(Detentos den[], Penas pen[]);
 int retornaProximoId(int enty, Detentos den[]);
 Detentos retornaDetentoPorNome(char nome[], Detentos denVec[]);
 Detentos retornaDetentoPorCPF(long int CPF, Detentos denVec[]);
+Detentos retornaDetentoPorID(int ID, Detentos denVec[]);
 int alteraDetentoCRUD(Detentos den, int id);
 void realocaDetentos(Detentos denVec[]);
 
@@ -32,5 +33,23 @@ void listaFuncAtividadeCRUD(int ID, FuncAtividade funcAtv[], Atividade atvVec[],
 int  alteraFuncAtvCRUD(FuncAtividade funcAtv, int id);
 int retornaProximoIdFuncAtiv(int enty, FuncAtividade funcAtv[]);
 int retornaFuncAtvID(int IDatividade, int IDdetento, FuncAtividade funcAtv[], char turno, char diaSemana[]);
+
+int cadastroVisitantesCRUD(Visitantes vis, int enty);
+void carregaVisitantesVetor(int enty, Visitantes vis[]);
+void listaVisitantesCRUD(Visitantes vis[]);
+int retornaProximoIdVisitantes(int enty, Visitantes vis[]);
+Visitantes retornaVisitantesPorCPF(long int CPF, Visitantes visVec[]);
+Visitantes retornaVisitantesPorID(int ID, Visitantes visVec[]);
+int  alteraVisitantesCRUD(Visitantes vis, int id);
+
+int cadastroVisitasCRUD(Visitas visitas, int enty);
+void carregaVisitasVetor(int enty, Visitas visitas[]);
+void listaVisitasCRUD(Visitas visitas[], Detentos denVec[], Visitantes visVec[]);
+void listaVisitasPorDetentoCRUD(Visitas visitas[], Detentos denVec[], Visitantes visVec[], int ID);
+void listaVisitasDataCRUD(Visitas visitas[], Detentos denVec[], Visitantes visVec[], int flag, char data[]);
+int retornaProximoIdVisitas(int enty, Visitas visita[]);
+Visitas retornaVisitasPorID(int ID, Visitas visVec[]);
+int  retornaVisitasID(int IdDetento, int IDVisitante, Visitas visitaVec[], char Data[], int sala);
+int alteraVisitasCRUD(Visitas visitas, int id);
 
 #endif // CRUD_H_INCLUDED
